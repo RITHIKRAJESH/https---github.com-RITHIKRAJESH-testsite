@@ -1,6 +1,8 @@
 const User=require('../model/userModel')
 const jwt=require('jsonwebtoken')
-
+const Product=require('../model/productModel')
+const Cart=require('../model/cartModel')
+const Order=require('../model/orderModel')
 const registerUser=async(req,res)=>{
 try{
    const {username,email,password} =req.body
@@ -37,5 +39,78 @@ const loginUser=async(req,res)=>{
    }
 }
 
+const viewproducts=async(req,res)=>{
+    try{
+          const products=await Product.find()
+          res.json(products)
+    }catch(err){
+        console.log(err)
+    }
+}
 
-module.exports={registerUser,loginUser}
+const addCart=async(req,res)=>{
+   const userId=req.headers.userid
+   const {productId,Quantity}=req.body
+   try{
+     const cart=await Cart.findOne({userId:userId,status:"cart"})
+     if(cart){
+       const productIndex=cart.product.findIndex(p=>
+         p.productId==productId
+       )
+       if(productIndex > -1){
+         cart.product[productIndex].quantity+=Quantity || 1
+       }else{
+         cart.product.push({productId,quantity:Quantity})
+       }
+       await cart.save()
+     }else{
+      const cart=await Cart({
+         userId,
+         product:[{
+            productId,
+            quantity:Quantity || 1
+         }]
+      })
+      await cart.save()
+     }
+     res.json("Product Added to cart successfully")
+   }catch(err){
+      console.log(err)
+   }
+}
+
+const fetchCartById=async(req,res)=>{
+   try{
+    const userId=req.headers.id;
+    const cartItems=await Cart.findOne({userId,status:"cart"}).populate('product.productId')
+    res.json(cartItems)
+   }catch(err){
+      console.log(err)
+   }
+}
+
+
+const createOrder=async(req,res)=>{
+   try{
+     const userId=req.headers.userid
+     console.log(req.body)
+     const {cartId,totalAmount,payment,address}=req.body
+     const orders=await Order({
+      userId,
+      cartId,
+      totalAmount,
+      payment,
+      address,
+      status:"Order Placed"
+     })
+     await orders.save()
+     const cartItem=await Cart.findOne({_id:cartId})
+     cartItem.status="Ordered"
+     cartItem.save()
+     res.json({message:"Order placed Successfully",status:200})
+   }catch(err){
+      console.log(err)
+   }
+}
+
+module.exports={registerUser,loginUser,viewproducts,addCart,fetchCartById,createOrder}

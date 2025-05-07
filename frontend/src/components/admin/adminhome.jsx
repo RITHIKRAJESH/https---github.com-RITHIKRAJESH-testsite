@@ -7,6 +7,7 @@ export default function Adminhome() {
     <>
     <Navbaradmin/>
     <h1>Welcome Admin</h1>
+  
     </>
   )
 }

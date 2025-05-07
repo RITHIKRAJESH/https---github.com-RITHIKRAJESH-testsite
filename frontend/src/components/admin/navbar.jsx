@@ -14,9 +14,9 @@ export default function Navbaradmin() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">User</Nav.Link>
-            <Nav.Link href="#home">Add Products</Nav.Link>
-            <Nav.Link href="#link">Products</Nav.Link>
+            <Nav.Link href="/viewuser">User</Nav.Link>
+            <Nav.Link href="/addproduct">Add Products</Nav.Link>
+            <Nav.Link href="/adminviewproducts">Products</Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Orders</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
