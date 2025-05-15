@@ -26,7 +26,7 @@ const loginUser=async(req,res)=>{
       console.log(loggeduser)
      if(loggeduser){
       if(loggeduser.Password == password){
-         const token=jwt.sign({id:loggeduser._id},"jwtsecretkey123",{expiresIn:"1h"})
+         const token=jwt.sign({id:loggeduser._id},process.env.Jwt_Secret_Key,{expiresIn:"1h"})
          res.json({msg:"User Logged In Successfull",status:200,token:token})
       }else{
          res.json({msg:"Password is incorrect",status:400})
@@ -113,4 +113,20 @@ const createOrder=async(req,res)=>{
    }
 }
 
-module.exports={registerUser,loginUser,viewproducts,addCart,fetchCartById,createOrder}
+const viewOrder=async(req,res)=>{
+   try{
+        const userId=req.headers.id
+        const orders=await Order.findOne({userId}).populate({
+         path:"cartId",
+         populate:{
+            path:"product.productId"
+         },
+        })
+        console.log(orders)
+        res.json(orders)
+   }catch(err){
+      console.log(err)
+   }
+}
+
+module.exports={registerUser,loginUser,viewproducts,addCart,fetchCartById,createOrder,viewOrder}

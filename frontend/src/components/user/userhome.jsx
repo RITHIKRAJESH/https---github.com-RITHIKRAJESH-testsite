@@ -13,7 +13,9 @@ export default function Userhome() {
   const decode=jwtDecode(token)
   const userId=decode.id
   useEffect(()=>{
-    AXIOS.get('http://localhost:9000/api/user/getProducts')
+    AXIOS.get('http://localhost:9000/api/user/getProducts',{headers:{
+      token:token
+    }})
     .then((res)=>{
       console.log(res.data)
       setProduct(res.data)

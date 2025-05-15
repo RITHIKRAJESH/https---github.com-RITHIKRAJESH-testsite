@@ -18,7 +18,7 @@ export default function Navbaradmin() {
             <Nav.Link href="/addproduct">Add Products</Nav.Link>
             <Nav.Link href="/adminviewproducts">Products</Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Orders</NavDropdown.Item>
+              <NavDropdown.Item href="/adminvieworders">Orders</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                Delivered
               </NavDropdown.Item>
